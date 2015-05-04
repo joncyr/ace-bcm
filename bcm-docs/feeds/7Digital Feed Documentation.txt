@@ -1,0 +1,49 @@
+7Digital data feed
+
+Technical Contact at 7Digital: Darren Owen <darren.owen@7digital.com> 
+Data Documentation: "7digitalCatalogueFeeds.pdf" 
+Documentation source: e-mail 01-08-2014
+
+
+Feeds are accessed via 2-legged OAuth signed HTTP get
+Files fetched with ruby script "fetch_feed.rb" (from 7Digital sample code)
+Files are gzipped csv files when downloaded
+Files are loaded using python CSV reader
+Data is batch loaded into postgres via SQLAlchemy
+
+postgres database name: 'sevendigital'
+
+tables loaded: Artist, Release, Track 
+
+data structures are defined in SQLAlchemy classes
+database structure created via fab as part of the load process
+indexes are TBD except for primary keys defined in SQLAlchemy
+
+feeds.import7Digital.load_full               Load a full update table	
+feeds.import7Digital.load_incremental        Load all incremental updates from the last time the database was updated
+
+To load from nothing database:
+
+as user postgres:
+
+createuser updateusername
+createdb sevendigital
+psql -c "grant all on database sevendigital to updateusername"
+psql -c "alter user updateusername password 'updateuserpassword'"
+
+As user updateusername:
+fab feeds.import7Digital.dev feeds.import7Digital.load_full
+fab feeds.import7Digital.dev feeds.load_incremental        
+
+
+Other notes:
+	Database name is hardcoded in the fab file
+	OAuth keys are hard-coded into the fetch_feed script
+	Full feeds are monthly on the first of the month [documentation says weekly]
+	Incremental data feeds are daily
+	Incremental data feeds have flags on rows for (D)elete, (U)pdate, and (I)nsert
+	7Digital has an API that can be used to be more up-to-date than once a day
+	Feeds are UTF-8 encoded
+	Do not refer to columns in data files by order, use the header row. They do not guarantee column order in the files.
+	Feeds are country specific, we are currently only using the feed "US" which is currently the default in the fetch_feeds script
+	It is safe to re-run incremental update processes

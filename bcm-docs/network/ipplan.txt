@@ -1,0 +1,141 @@
+##
+## BOSE ACE Cloud IP Allocation & Assignment Plan
+##
+
+# Note: Proper subnetting for a routed network isn't fully
+# necessary within AWS due to their style of SDN. But for
+# best practices, we will lay out the network as if it were
+# in/on a physical hosted infrastructure.
+# Network Engineers will be pleased.
+
+## Top Level Networks:
+172.16.0.0/16                       - AWS: vpc-us-east-1-dev
+172.17.0.0/16                       - AWS: vpc-us-west-1-dev *
+
+172.31.0.0/16                       - AWS: vpc-us-west-2-prod *
+172.32.0.0/16                       - AWS: vpc-us-east-1-prod
+
+10.180.0.0/16                       - AWS: vpc-us-east-1-main
+10.181.0.0/16                       - AWS: vpc-us-west-1-main *
+
+
+################################################################################
+# AWS VPC US-EAST-1 MAIN
+################################################################################
+10.180.0.0/16                       - vpc-us-east-1-main
+    10.180.0.0/18                   - us-east-1b availability zone
+        10.180.0.0/19               - public subnets
+
+            10.180.0.0/24           - tools
+            ...
+            10.180.31.0/24          - vpn clients
+
+        10.180.32.0/19              - private subnets
+
+    10.180.64.0/18                  - us-east-1c availability zone
+        10.180.64.0/19              - public subnets
+        10.180.96.0/19              - private subnets
+    10.180.128.0/18                 - us-east-1d availability zone
+        10.180.128.0/19             - public subnets
+        10.180.160.0/19             - private subnets
+    10.180.192.0/18                 - us-east-1e availability zone
+        10.180.192.0/19             - public subnets
+        10.180.224.0/19             - private subnets
+
+
+################################################################################
+# AWS VPC US-EAST-1 DEV
+################################################################################
+172.16.0.0/16                       - vpc-us-east-1-dev
+
+    172.16.0.0/18                   - us-east-1b availability zone
+        172.16.0.0/19               - public subnets
+
+            172.16.0.0/24           - tools
+            172.16.1.0/24           - load balancer
+            172.16.2.0/24           - rabbitmq cluster
+            172.16.3.0/24           - rest api
+            172.16.4.0/24           - scratch space
+            ...
+            172.16.31.0/24          - vpn clients
+
+        172.16.32.0/19              - private subnets
+
+            172.16.32.0/24          - storm
+            172.16.33.0/24          - database
+            172.16.34.0/24          - rabbitmqc ipc cluster
+            172.16.35.0/24          - cassandra
+            172.16.36.0/24          - elasticsearch
+            172.16.37.0/24          - kafka
+
+    172.16.64.0/18                  - us-east-1c availability zone
+        172.16.64.0/19              - public subnets
+
+            172.16.64.0/24          - tools
+            172.16.65.0/24          - load balancer
+            172.16.66.0/24          - rabbitmq cluster
+            172.16.67.0/24          - rest api
+            172.16.68.0/24          - scratch space
+            ...
+            172.16.95.0/24          - vpn clients
+
+
+        172.16.96.0/19              - private subnets
+
+            172.16.96.0/24          - storm
+            172.16.97.0/24          - database
+
+    172.16.128.0/18                 - us-east-1d availability zone
+        172.16.128.0/19             - public subnets
+
+            172.16.128.0/24         - tools
+            172.16.129.0/24         - load balancer
+            172.16.130.0/24         - rabbitmq cluster
+            172.16.131.0/24         - rest api
+            172.16.132.0/24          - scratch space
+            ...
+            172.16.159.0/24         - vpn clients
+
+        172.16.160.0/19             - private subnets
+
+            172.16.160.0/24         - storm
+            172.16.161.0/24         - database
+
+
+    172.16.192.0/18                 - us-east-1e availability zone
+        172.16.192.0/19             - public subnets
+
+            172.16.192.0/24         - tools
+            172.16.193.0/24         - load balancers
+            172.16.194.0/24         - rabbitmq cluster(s)
+            172.16.195.0/24         - rest apis
+            172.16.196.0/24         - scratch space
+            ...
+            172.16.223.0/24         - vpn clients
+
+        172.16.224.0/19             - private subnets
+
+            172.16.224.0/24         - storm
+            172.16.225.0/24         - database
+            172.16.226.0/24         - rabbitmqc ipc cluster
+            172.16.227.0/24         - cassandra
+            172.16.228.0/24         - elasticsearch
+
+################################################################################
+# AWS VPC US-EAST-1 PROD
+################################################################################
+172.32.0.0/16                       - vpc-us-east-1-prod
+
+    172.32.0.0/18                   - us-east-1b availability zone
+        172.32.0.0/19               - public subnets
+
+            172.32.0.0/24           - tools
+            ...
+        172.32.32.0/19              - private subnets
+
+            172.32.32.0/24          - storm
+            172.32.33.0/24          - database
+            172.32.34.0/24          - rabbitmqc ipc cluster
+            172.32.35.0/24          - cassandra
+            172.32.36.0/24          - elasticsearch
+            172.32.37.0/24          - kafka

@@ -1,0 +1,4 @@
+KAFKA_HEAP_OPTS="-Xms<%= @c['jvm']['heap_min'] %> -Xmx<%= @c['jvm']['heap_max'] %>"
+KAFKA_JVM_PERFORMANCE_OPTS="<%= @c['jvm']['performance_opts'] %>"
+KAFKA_LOG4J_OPTS="<%= @c['jvm']['server_log4j_opts'] %>"
+LOG_DIR=<%= @c['logs_dir'] %>

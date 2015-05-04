@@ -1,0 +1,184 @@
+Current Sprint/Started
+
+
+Projected timeline:
+	03-18 Test Feed integration begins
+	04-01 Test Feed begins 
+	05-01 Live feed
+
+Goal:
+	End-To-End Matching service working in AWS production environment
+	handles live Marge feed, matches feed to Rovi and stores results
+	Completely automated data update system for Rovi, DAR.fm, and 7Digital
+
+ElasticSearch
+	chef cookbook
+	build clusters
+	load testing
+	gateway node(s)?
+	metrics
+
+Production Infrastructure v1:
+	build two regions
+	deploy BCM stack in both
+	encryption (disk, ssl, passwords)
+	multi region networking
+	backups, monitoring, logs
+
+Service Discovery:
+	consul
+	dns resolver + forwarding
+
+Kafka:
+	chef cookbook
+	experiment/test/benchmark
+	metrics
+	convert code from rabbitmq to kafka
+
+Meetings:
+	security
+	CIS leadership
+	team fortis
+	consultant
+
+Infrastructure Improvements:
+	python pip
+	documentation, presentations
+
+	
+
+Infrastructure
+	Architecture review with ACE
+	Architecture Review with CIS
+	Architecture Review with Shelby Architecture Board
+*	Security Review with CIS (ongoing)
+	Fault Tolerance Planning
+		Consul
+*	Credential Management	
+	Discuss RabbitMQ Naming Conventions
+	Build Feeds server
+		Automate postgres via Chef
+		Automate mySQL via Chef
+	Investigate/Learn
+*		Elastic Search
+*		Storm
+*		Cassandra
+*		Kinesis
+--	Estimate for rest of Sprint
+	Build Cluster Management System (etcd or zookeeper or consul)
+	Build Elastic Search - Manual Scaling
+	Build Storm - Manual Scaling
+	Build Cassandra
+	Build Marge Event Stream Transport
+	Docker
+		Investigate
+		Software Packaging/Release Management Discussion (Jinyu, Dave, Josh)
+
+	Clean up Fabric Files and merge sources
+	Template fabric userdata
+	Define Backup Systems
+	Build production VPC(s)
+	Implement auto-scaling 
+		Cassandra, 
+		storm
+		Elastic Search
+	
+	?Load Balancers?
+
+
+Matching
+	Configure Pipeline:
+*		data from DAR.fm -> RabbitMQ
+*		RabbitMQ -> Storm
+*		Storm Output -> Postgres/Cassandra
+
+*	Implement Algorithm
+
+	Create Elastic Search custom tables in Postgres
+	Define re-matching process
+	Move to live servers
+	Write app to handle Marge data and store the output (after test feed starts)
+	Write apps to match all of DAR.fm and 7Digital to Rovi
+	Implement re-matching process
+	Evaluate matching against iTunes collections (all regions)
+	Build Test Cases
+	Refine algorithm
+
+Updates
+*	learn Chef cookbooks and create cookbook for scheduling updates for DAR.fm, Rovi, and 7Digital
+*	add update->RabbitMQ code and integrate into all of the update processes
+*	Move to live servers
+	Write consumers for the RabbitMQ update messages:
+*		whizzy tables updates
+*		Elastic Search updates
+
+
+REST API
+*	move to real server
+
+usage metrics (examples)
+	Report mock-ups
+	Create reports (after May 1st)
+	
+Collaborative Filtering System
+	Deep Dive - Mater ¾ Algorithm
+	Prepare Test Data Sets
+	Implement Test System
+	Experiment
+
+
+Additional Data Services
+	design matching system from vTuner and iHeartRadio to DAR.fm now playing
+	Acquire additional data from DAR.fm 
+
+
+
+DARfm
+	Arrange for access to DARfm API for live "now playing" information (Need Contract)
+	Evaluate station connections and coverage between iHeartRadio and DARfm
+	Evaluate station connections and coverage between vTuner and DARfm
+	Match all of DARfm to Rovi
+	Evaluate quality of data overall from Darfm (Coverage and format issues)
+	Build system that returns a list of tracks given a station from vTuner or iHeartRadio and a time range
+	Design a station profile "Preference Vector"
+	Build system that returns "Preference Vector" given a station
+
+User data
+	Design a user profile "Preference Vector"
+	Implement user play history storage - per track, save:
+		last played timestamp, 
+		playcount, 
+		aggregated implicit/explicit feedback 
+			(skips, 
+			volume, 
+			thumbs up/down, 
+			itunes rating, 
+			requested, 
+			location/device/context)
+
+Gift enrollment
+	[Target: mid-late April]
+	Get understanding of available Spotify & Echonest APIs
+	List "hooks" (age, gender, locale, genre, favorite artist, etc.)
+	List "Targets" (Spotify public playlists, Bose created playlists, spotify radio [artist stations])
+	(CH 1, DD 2, [CH,DD,RC,KM] 1)
+
+	Determine workflow - sequence of questions (CH 2, RC 5 over 2 weeks)
+	Determine sequence of API calls (DD 2, CH 1)
+	Estimate work/stories for a demo app [ALL .5]
+
+	End to End demo [target: end of May]
+
+	Other resources/contact : Chris Pereira [PM], Bill Edmondson [has looked at echonest]
+
+	How good could it be with vTuner in place of Spotify
+
+Backlog Major stories
+	Retrieve Play History for a user from system
+	Retrieve user preferences for a user from system
+	Create playlist from set of tracks + user preferences
+	Monitoring System
+	Implement Backup Systems
+	Move Git to S3
+	Choose KMS - AWS, Openstack Keymanager, Chef Vault 
+	Bulk Matching tool for collection from iTunes/Phone/Android

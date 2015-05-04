@@ -1,0 +1,59 @@
+Rovi data feed:
+
+Technical Contact: datasupport@rovicorp.com
+Data Documentation: "Rovi Music Data Dictionary_v1 8 _3_2014.pdf"
+Documentation source: http://datasolutions.rovicorp.com/ Go to "Products", "Rovi Music Data", "Rovi Music Data Dictionary"
+Each Bose developer needing access to datasolutions.rovicorp.com needs their own login.
+
+Files are served via FTP, bose has a single login for downloading from the FTP site.
+
+Files fetched via shell script "download_data" (written by Shivakar)
+Files are gzipped tar files, one for each data tier, each tar contains multiple tables
+Files are delimited with chr(1) for column, chr(2) for row
+Files are loaded using custom python CSV reader that uses char(1),char(2) delimiters
+Data is batch loaded into postgres via SQLAlchemy
+
+postgres database name: 'rovi'
+
+datasets: ['discover','twitter', 'facebook', 'influence', 'experience' ]
+
+tables loaded: Name, Album, Release, Track, Media, Part, Performance, Event, 
+	Attribute, AttributeAssociation, Association, AttributeLink, Hyperlink, 
+	VendorLink, Document, Image, ImageLink, TrackQuantitativeValue, 
+	ImageKey, AudioSample, Composition, Location
+
+data structures are defined in SQLAlchemy classes
+database structure created via fab as part of the load process
+
+indexes are created using sql script pgsql_create_indices.sql except for primary keys defined in SQLAlchemy
+
+Create Rovi databases from nothing:
+
+as user postgres:
+
+createuser updateusername
+createdb rovi
+psql -c "grant all on database rovi to updateusername"
+psql -c "alter user updateusername password 'updateuserpassword'"
+
+As user updateusername:
+
+fab feeds.importRovi.dev feeds.importRovi.load_full
+PGOPTIONS='-c maintenance_work_mem=1GB' psql --username=updates rovi < feeds/scripts/pgsql_create_rovi_indices.sql
+fab feeds.importRovi.load_incremental
+
+downloading full takes about 2 hours from Rovi to scratch1 (03/2015, 6.1GB)
+load_full took 19.58 hours on scratch1 (03/2015) 19.26 on feeds (03/2015)
+create_rovi_indices takes 4.85 hours on scratch1, 6am on 
+
+Other notes:
+	FTP credentials are in the .ftpcreds file
+	Database name is hardcoded in the fab file
+	Full feeds are monthly on the first of the month
+	Incremental data feeds are daily
+	All publications are guaranteed by 9pm eastern but are usually available before 7am.
+	Incremental data feeds have flags on rows for (D)elete, (C)hange, and (A)ppend
+	Feeds are UTF-8 encoded
+	It is safe to re-run incremental update processes
+	There is a cumulative monthly update that is available that could be used instead of the daily updates. We are not using this update method.
+

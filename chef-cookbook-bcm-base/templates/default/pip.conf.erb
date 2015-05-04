@@ -1,0 +1,5 @@
+[global]
+index-url = <%= @p['index_url'] %>
+<%- if not @p['extra_index_url'].nil? then -%>
+extra-index-url = <%= @p['extra_index_url'] %>
+<%- end -%>

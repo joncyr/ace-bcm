@@ -1,0 +1,12 @@
+[Unit]
+Description=chef-unregister.service
+After=chef-client.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/bin/true
+ExecStop=/etc/chef/chef-unregister.sh
+
+[Install]
+WantedBy=multi-user.target

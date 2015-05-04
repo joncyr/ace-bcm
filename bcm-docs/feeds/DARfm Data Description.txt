@@ -1,0 +1,18 @@
+The tables provided are raw backups, therefore there are some columns which are internally used and are not necessarily revelant.
+
+I am including a brief explanation of the columns:
+"	songlist_id is the unique key for each song entry. 
+"	songcontrol_id should be used to match a station to a songlist entry. (See description of stationsongctrl table below) We use it internally to reference the grabbing technology.
+"	songstamp is the timestamp the 'grabber' first saw the new/updated song.
+"	songsourceid is an internal field that safe to ignore completely.
+"	songtype identifies the content (Usually: track, speech, ad) 
+"	songartist, songtitle is the song data
+"	songalbum is not always provided, but if it is, we include it here
+"	songcueinfo is not always provided, but if it is, we include it here
+"	songarturl is not always provided, but if it is, we include it here
+"	songinfourl is not always provided, but if it is, we include it here
+"	songduration is not always provided, but if it is, we include it here
+
+The table 'stationsongctrl' exists so you can identify which callsign any given song in songlist played on:
+"	songcontrol_id crossreferences with songlist's entry by the same name.
+"	callsign is the callsign of a terrestrial station or the common short name of a net only station.

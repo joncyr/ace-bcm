@@ -1,0 +1,8 @@
+name             'bcm-git-server'
+maintainer       'Josh West'
+maintainer_email 'josh_west@bose.com'
+license          'All rights reserved'
+description      'Installs/Configures bcm-git-server'
+long_description 'Installs/Configures bcm-git-server'
+version          '1.0.2'
+depends          'apache2'

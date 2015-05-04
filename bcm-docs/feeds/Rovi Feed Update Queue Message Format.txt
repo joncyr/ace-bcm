@@ -1,0 +1,22 @@
+The JSON messages that are in the queue for the Rovi daily update logging are formatted as follows:
+
+{  
+   "dataset":"rovi",
+   "logdate":"yymmdd",
+   "tables":{  
+      "tablename":{  
+         "insert":[  
+            array of insert keys
+         ],
+         "update":[  
+            array of update keys
+         ],
+         "delete":[  
+            array of delete keys
+         ]
+      }
+   }
+}
+
+
+The keys are the primary keys for the Rovi table, tablename for each table updated. The logdate is the date for the update applied, not the date of processing.

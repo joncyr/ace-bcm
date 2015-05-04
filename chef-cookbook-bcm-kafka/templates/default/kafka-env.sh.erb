@@ -1,0 +1,12 @@
+#!/bin/bash
+
+## Kafka Environment Variable Script
+##
+## Source this file before running /usr/share/kafka/bin/*.sh client toolset commands.
+##
+## bash:~$ source /etc/kafka/kafka-env.sh
+
+export KAFKA_HEAP_OPTS="-Xms<%= @c['jvm']['heap_min'] %> -Xmx<%= @c['jvm']['heap_max'] %>"
+export KAFKA_JVM_PERFORMANCE_OPTS="<%= @c['jvm']['performance_opts'] %>"
+export KAFKA_LOG4J_OPTS="<%= @c['jvm']['client_log4j_opts'] %>"
+export LOG_DIR=<%= @c['logs_dir'] %>

@@ -1,0 +1,14 @@
+[Unit]
+Description=Kafka
+After=network.target auditd.service
+
+[Service]
+EnvironmentFile=/etc/sysconfig/kafka
+ExecStart=/usr/share/kafka/bin/kafka-server-start.sh /etc/kafka/server.properties
+ExecStop=/usr/share/kafka/bin/kafka-server-stop.sh
+ExecReload=/bin/kill -HUP $MAINPID
+User=kafka
+Group=kafka
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,54 @@
+DARfm data feed:
+
+Technical Contact: Ken Son <kson@dar.fm>
+Data Documentation: "DARfm Data Description.txt"
+Documentation source: e-mail 10-24.2014 from Ken Son
+
+Files are served via http from http://data.dar.fm/ using username/password authentication
+
+Files fetched via wget called from fab
+
+Files are gzipped sql files
+Files are raw mysql backups, one file per week
+Files are loaded by piping the compressed files into a mysql command line interpreter
+Data is batch converted into postgres via py-mysql2pgsql
+
+postgres database name: 'darfm'
+
+tables loaded: stationsongctrl (complete refresh every week), songlist (append records each week)
+
+database structure created via py-mysql2pgsql
+
+indexes are created using sql script pgsql_create_darfm_indices.sql
+
+Create DARfm databases from nothing:
+
+as user postgres, create user and database for postgres
+
+createuser updateusername
+createdb darfm
+psql -c "grant all on database darfm to updateusername"
+psql -c "alter user updateusername password 'updateuserpassword'"
+
+as any user, create database and user for mysql
+
+mysql -u root -h feeds-useast1b.dev.bosecm.com -e "create user dbagent"
+mysql -u root -h feeds-useast1b.dev.bosecm.com -e "set password for dbagent= password('HelloWorldHowAreYou')"
+mysql -u root -h feeds-useast1b.dev.bosecm.com -e "create database darfm"
+mysql -u root -h feeds-useast1b.dev.bosecm.com -e "grant all privileges on *.* to dbagent@localhost"
+
+As user updateusername:
+
+fab feeds.importDARfm.dev feeds.importDARfm.create_darfmdb_schema
+fab feeds.importDARfm.dev feeds.importDARfm.load_darfm_incremental
+PGOPTIONS='-c maintenance_work_mem=1GB' psql darfm < pgsql_create_darfm_indices.sql
+
+Other notes:
+	Database names and credentials are hardcoded in the fab file and the .yml files in the scripts directory
+	Authentication credentials are hardcoded in the fab file (dar_user.dar_password)
+	Incremental data feeds are weekly on Monday morning.
+	Feed should be finished at 4am Pacific (7am eastern) there have been issues with delivery times.
+	We run updates on Tuesdays.
+	Feeds are UTF-8 encoded, this changed from latin1 mid-2014
+	Do not re-run an incremental date that has already run, it results in duplicate data
+
